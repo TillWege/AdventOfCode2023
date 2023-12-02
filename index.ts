@@ -7,6 +7,7 @@ export interface Solver {
   init: () => void;
   solvePart1: () => string;
   solvePart2: () => string;
+  [others: string]: unknown;
 }
 
 const solvers = readdirSync("./solver");
@@ -34,5 +35,6 @@ terminal.singleColumnMenu(
     terminal(`Part 2: \n`);
     terminal(solver.solvePart2());
     terminal(`\n`);
+    terminal.processExit(0);
   },
 );
