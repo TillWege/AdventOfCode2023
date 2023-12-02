@@ -12,29 +12,47 @@ export interface Solver {
 
 const solvers = readdirSync("./solver");
 
-terminal("Choose a Solver: ");
+if (process.argv[2] == "--today") {
+  // eslint-disable-next-line @typescript-eslint/no-var-requires
+  const solver: Solver = require(`./solver/${solvers.pop()}`).default;
 
-terminal.singleColumnMenu(
-  solvers,
-  (err, response: SingleColumnMenuResponse) => {
-    if (err) {
-      console.error(err);
-      return;
-    }
+  solver.init();
 
-    // eslint-disable-next-line @typescript-eslint/no-var-requires
-    const solver: Solver = require(`./solver/${response.selectedText}`).default;
+  terminal(`Part 1: \n`);
+  terminal(solver.solvePart1());
+  terminal(`\n`);
 
-    terminal(`Initializing ${response.selectedText}...\n`);
-    solver.init();
+  terminal(`Part 2: \n`);
+  terminal(solver.solvePart2());
+  terminal(`\n`);
+  terminal.processExit(0);
+} else {
+  terminal("Choose a Solver: ");
 
-    terminal(`Part 1: \n`);
-    terminal(solver.solvePart1());
-    terminal(`\n`);
+  terminal.singleColumnMenu(
+    solvers,
+    (err, response: SingleColumnMenuResponse) => {
+      if (err) {
+        console.error(err);
+        return;
+      }
 
-    terminal(`Part 2: \n`);
-    terminal(solver.solvePart2());
-    terminal(`\n`);
-    terminal.processExit(0);
-  },
-);
+      // eslint-disable-next-line @typescript-eslint/no-var-requires
+      const solver: Solver = require(
+        `./solver/${response.selectedText}`,
+      ).default;
+
+      terminal(`Initializing ${response.selectedText}...\n`);
+      solver.init();
+
+      terminal(`Part 1: \n`);
+      terminal(solver.solvePart1());
+      terminal(`\n`);
+
+      terminal(`Part 2: \n`);
+      terminal(solver.solvePart2());
+      terminal(`\n`);
+      terminal.processExit(0);
+    },
+  );
+}
